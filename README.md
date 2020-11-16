@@ -11,7 +11,7 @@ https://discordapp.com/oauth2/authorize?&client_id=777985751258234920&scope=bot&
 |------------------|-------------------------------------------------------------------------------------------|
 | !about           | Info on how to add new functionality to HawxBot                                           |
 | !campaign        | Show Hawx's latest campaign task list                                                     |
-| !help            | List all available commands                                                               |
+| !helpmehawx      | List all available commands                                                               |
 | !patchnotes      | Gets the latest patch note                                                                |
 | !patchnotesmajor | Gets the latest Major patch note and notes for any subsequent Minor patches               |
 

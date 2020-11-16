@@ -45,7 +45,7 @@ bot.on('message', async message => {
             replyToPerson = false;
             break;
     
-        case '!help':
+        case '!helpmehawx':
             reply = await messages.ListBotCommands();
             break;
 
