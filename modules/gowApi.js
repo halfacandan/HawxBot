@@ -19,7 +19,7 @@ console.log(json);
         console.log("GetHawxCommandItems");
         let json = await MakeApiGetCallAsync(endpointPath);
 console.log(json);
-        var messages = array();
+        var messages = Array();
         if(json == null) {
             messages.push("**\*Blip\*** *\*Blip\** ***\*Blip\**** End of Cheese Error");
         } else {

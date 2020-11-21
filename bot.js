@@ -79,7 +79,7 @@ bot.on('message', async message => {
                         reply = hawxCommand.help;
                     } else {
                         // If no arguments are specified then just show the latest data
-                        if(parsedMessage.Arguments.length == 0) parsedMessage.Arguments = array("latest");
+                        if(parsedMessage.Arguments.length == 0) parsedMessage.Arguments = Array("latest");
                         let hawxApiUrl = "v1/hawx" + parsedMessage.Arguments.join("/");
                         reply = await gowApi.GetHawxCommandItems(hawxApiUrl);
                     }
