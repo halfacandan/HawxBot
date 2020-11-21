@@ -21,8 +21,9 @@ module.exports = {
 
         const textToImage = require('text-to-image');
 
-        embeddedMessage = new discord.MessageEmbed().setTitle(messageObj.title);
-        
+        var embeddedMessage = new discord.MessageEmbed().setTitle(messageObj.title);
+        var attachments = null;
+
         if(messageObj.description != null){
             embeddedMessage.setDescription(messageObj.description);
         }
@@ -62,12 +63,15 @@ module.exports = {
             embeddedMessage.setImage(`attachment://${imageName}.png`);
         }
 
-        let message = { 
-            embed: embeddedMessage, 
-            files: attachments
+
+        if(attachments == null){
+            return embeddedMessage;
+        } else {
+            return { 
+                embed: embeddedMessage, 
+                files: attachments
+            };
         }
-        
-        return message;
     },
     SendReplies: async function(userMessage, replies, reactions = null, replyToPerson = false){
         

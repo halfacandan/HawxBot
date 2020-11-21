@@ -114,14 +114,15 @@ bot.on('message', async message => {
             break;
         
         default:
-            if(message.channel != null) message.channel.startTyping();
-
+            
             hawxCommands = await gowApi.ListHawxCommands();
             for(var i=0; i < hawxCommands.commands.length; i++){
                 let hawxCommand = hawxCommands.commands[i];
 
                 // Try to match a command
                 if(hawxCommand.command == parsedMessage.Command){
+                    if(message.channel != null) message.channel.startTyping();
+
                     // Check for help argument
                     if(parsedMessage.Arguments.length > 0 && parsedMessage.Arguments[0].toLowerCase() =="help") {
                         replies.push(hawxCommand.help);
