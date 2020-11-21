@@ -69,7 +69,7 @@ module.exports = {
         
         return message;
     },
-    SendReplies: async function(replies, replyToPerson, userMessage){
+    SendReplies: async function(replies, reactions, replyToPerson, userMessage){
         
         if(replies != null){
             
