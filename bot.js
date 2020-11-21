@@ -120,7 +120,12 @@ bot.on('message', async message => {
         } else {
             replies = Array.isArray(reply) ? reply : Array(reply);
             for(var i=0; i < replies.length; i++){
-                replyMessage = await message.channel.send(replies[i], { split: true });
+                console.log(typeof replies[i]);
+                if(typeof replies[i] === "string") {
+                    replyMessage = await message.channel.send(replies[i], { split: true });
+                } else {
+                    replyMessage = await message.channel.send(replies[i]);
+                }
             }
         }
         replyMessage = Array.isArray(replyMessage) ? replyMessage[0] : replyMessage;
