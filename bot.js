@@ -1,7 +1,6 @@
 const helpers = require('./modules/helpers.js');
 const messages = require('./modules/messages.js');
 const gowApi = require('./modules/gowApi.js');
-const textToImage = require('text-to-image');
 const discord = require('discord.js');
 const bot = new discord.Client();
 
@@ -78,37 +77,34 @@ bot.on('message', async message => {
         case '!test':
             message.channel.startTyping();
 
-            reply = 
-                new discord.MessageEmbed()
-                    .setTitle('Help with !campaign')
-                    .setDescription('Get the latest campaign task.')
-                    .addFields(
-                        { name: 'Options', value: 'You can return specific data using the options below.\nYou can also combine the various options e.g. **!campaign campaign 2 week 1**' },
-                    )
-                    .setImage('attachment://test.png');
-                
-            let asciiTable = "Filters  | Example Command       | Valid Values         \n" +
-                             "---------|-----------------------|----------------------\n" +
-                             "campaign | !campaign campaign 2  | 2                    \n" +
-                             "week     | !campaign week 1      | 1, 2, 3, 4, 5, 6, 7  \n";
-            
-                    let asciiTableCarsPerRow = 60;
+            let messageObj = {
+                "messages": [
+                    {
+                        "type": "Embedded",
+                        "title": "Help with !campaign",
+                        "description": "Get the latest campaign task.",
+                        "sections": [
+                            {
+                                "title": "Options",
+                                "text": "You can return specific data using the options in the table below.\nYou can also combine the various options e.g.\n**!campaign campaign 2 week 1**"
+                            }
+                        ],
+                        "table": "Filters  | Example Command       | Valid Values         \n" +
+                                 "---------|-----------------------|----------------------\n" +
+                                 "campaign | !campaign campaign 2  | 2                    \n" +
+                                 "week     | !campaign week 1      | 1, 2, 3, 4, 5, 6, 7  "
+                    }
+                ]
+            }
 
-            let image = await textToImage.generate(asciiTable, {
-                "fontFamily": "Courier",
-                "fontSize": 16,
-                "textColor": "#98b1b8", // Discord Light Gray
-                "bgColor": "#2f3136", // Discord Dark Gray
-                "maxWidth": asciiTableCarsPerRow * 10,
-                "margin": 5
-            });
-        
-            const imageStream = new Buffer.from(image.split(",")[1], 'base64');
-            attachments = Array(new discord.MessageAttachment(imageStream, 'test.png'));
-            message.channel.stopTyping();
-// Don't break...just send the message here.
-
+            for(var i = 0; i < messageObj.messages.length; i++){
+                replies.push(
+                    await helpers.CreateEmbeddedMessage(messageObj.messages[i])
+                );
+            }
             replyToPerson = false;
+
+            message.channel.stopTyping();
             break;
         
         default:
@@ -146,14 +142,7 @@ bot.on('message', async message => {
                 if(typeof replies[i] === "string") {
                     replyMessage = await message.channel.send(replies[i], { split: true });
                 } else {
-                    if(attachments == null){
-                        replyMessage = await message.channel.send(replies[i]);
-                    } else {
-                        replyMessage = await message.channel.send({ 
-                            embed: replies[i] , 
-                            files: attachments 
-                        });
-                    }
+                    replyMessage = await message.channel.send(replies[i]);
                 }
             }
         }
