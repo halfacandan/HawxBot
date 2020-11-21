@@ -39,6 +39,7 @@ module.exports = {
         if(messageObj.image == null && messageObj.table != null){
             
             const PxPerChar = 10;
+            const MarginPx = 5;
             let maxCharsPerRow = Math.max(...(messageObj.table.split("\n").map(el => el.length)));
                 
             let image = await textToImage.generate(messageObj.table, {
@@ -46,8 +47,8 @@ module.exports = {
                 "fontSize": 16, // 16 = Approx 10px width per character
                 "textColor": "#98b1b8", // Discord Light Gray
                 "bgColor": "#2f3136", // Discord Dark Gray
-                "maxWidth": maxCharsPerRow * PxPerChar,
-                "margin": 5
+                "maxWidth": maxCharsPerRow * PxPerChar + (2 * MarginPx),
+                "margin": MarginPx
             });
         
             const imageStream = new Buffer.from(image.split(",")[1], 'base64');

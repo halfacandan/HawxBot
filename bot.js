@@ -69,7 +69,6 @@ bot.on('message', async message => {
             if(message.channel != null) message.channel.startTyping();
 
             data = await gowApi.GetLatestPatchNote();
-            if(data == null) return;
             replies.concat(data.messages);
             replyToPerson = false;
             break;
@@ -78,7 +77,6 @@ bot.on('message', async message => {
             if(message.channel != null) message.channel.startTyping();
 
             data = await gowApi.GetLatestMajorPatchNote();
-            if(data == null) return;
             replies.concat(data.messages);
             replyToPerson = false;
             break;
@@ -131,8 +129,9 @@ bot.on('message', async message => {
                         // If no arguments are specified then just show the latest data
                         if(parsedMessage.Arguments.length == 0) parsedMessage.Arguments = Array("latest");
                         let hawxApiUrl = hawxCommand.links.href + "/" + parsedMessage.Arguments.join("/");
+                        let messages = await gowApi.GetHawxCommandItems(hawxApiUrl);
 
-                        replies.concat(await gowApi.GetHawxCommandItems(hawxApiUrl));
+                        replies.concat(messages);
                         replyToPerson = false;
                     }
                 }
@@ -164,9 +163,9 @@ bot.on('message', async message => {
         if(reactions != null){
             await helpers.reactAsync(bot, finalReplyMessage, reactions);
         }
-
-        if(message.channel != null) message.channel.stopTyping();
     }
+
+    if(message.channel != null) message.channel.stopTyping();
 });
 
 // Login to Discord as the Bot
