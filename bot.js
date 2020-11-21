@@ -74,7 +74,7 @@ bot.on('message', async message => {
             break;
 
         case '!test':
-            reply = new Discord.MessageEmbed()
+            reply = new discord.MessageEmbed()
                 .setTitle('Help with !campaign')
                 .setDescription('Get the latest campaign task.')
                 .addFields(
