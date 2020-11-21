@@ -147,7 +147,7 @@ bot.on('message', async message => {
                     if(attachment == null){
                         replyMessage = await message.channel.send(replies[i]);
                     } else {
-                        replyMessage = await message.channel.send(replies[i], attachment);
+                        replyMessage = await message.channel.send(replies[i], attachments);
                     }
                 }
             }
