@@ -147,7 +147,7 @@ bot.on('message', async message => {
             break;
     }
 
-    await messages.SendReplies(userMessage, replies, reactions, replyToPerson);
+    await messages.SendReplies(message, replies, reactions, replyToPerson);
 });
 
 // Login to Discord as the Bot
