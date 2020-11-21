@@ -76,37 +76,36 @@ bot.on('message', async message => {
             break;
 
         case '!test':
-            reply = new discord.MessageEmbed()
-                .setTitle('Help with !campaign')
-                .setDescription('Get the latest campaign task.')
-                .addFields(
-                    { value: 'You can return specific data using these options:' },
-                    { name: '\u200B', value: '\u200B' },
-                    { name: 'Option', value: 'campaign\nweek', inline: true },
-                    { name: 'Example Command', value: '!campaign campaign 2\n!campaign week 1', inline: true },
-                    { name: 'Valid Values', value: '2\n1, 2, 3, 4, 5, 6, 7 ', inline: true },
-                    { name: '\u200B', value: '\u200B' },
-                    { value: 'You can also combine the various options e.g. **!campaign campaign 2 week 1**' }
-                )
-                .setImage('attachment://test.png');
-            
+            message.channel.startTyping();
+
+            reply = 
+                new discord.MessageEmbed()
+                    .setTitle('Help with !campaign')
+                    .setDescription('Get the latest campaign task.')
+                    .addFields(
+                        { name: 'Options', value: 'You can return specific data using the options below.\nYou can also combine the various options e.g. **!campaign campaign 2 week 1**' },
+                    )
+                    .setImage('attachment://test.png');
+                
             let asciiTable = "Filters  | Example Command       | Valid Values         \n" +
                              "---------|-----------------------|----------------------\n" +
                              "campaign | !campaign campaign 2  | 2                    \n" +
                              "week     | !campaign week 1      | 1, 2, 3, 4, 5, 6, 7  \n";
             
+                    let asciiTableCarsPerRow = 60;
+
             let image = await textToImage.generate(asciiTable, {
                 "fontFamily": "Courier",
                 "fontSize": 16,
-                "textColor": "#89aebe",
-                "bgColor": "#2f3136", // Discord dark Gray
-                "maxWidth": 720,
+                "textColor": "#98b1b8", // Discord Light Gray
+                "bgColor": "#2f3136", // Discord Dark Gray
+                "maxWidth": asciiTableCarsPerRow * 10,
                 "margin": 5
             });
         
             const imageStream = new Buffer.from(image.split(",")[1], 'base64');
             attachments = Array(new discord.MessageAttachment(imageStream, 'test.png'));
-            
+            message.channel.stopTyping();
 // Don't break...just send the message here.
 
             replyToPerson = false;
