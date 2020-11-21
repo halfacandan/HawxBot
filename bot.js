@@ -69,8 +69,8 @@ bot.on('message', async message => {
         
         default:
             hawxCommands = await gowApi.ListHawxCommands();
-            for(var i=0; i < json.commands.length; i++){
-                let hawxCommand = json.commands[i];
+            for(var i=0; i < hawxCommands.commands.length; i++){
+                let hawxCommand = hawxCommands.commands[i];
 
                 // Try to match a command
                 if(hawxCommand.command == parsedMessage.Command){
