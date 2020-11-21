@@ -35,6 +35,7 @@ bot.on('message', async message => {
     // Define the reply
     var data = null;
     var reply = null;
+    var attachment = null;
     var reactions = null;
     var replyToPerson = true;
 
@@ -87,9 +88,18 @@ bot.on('message', async message => {
                     { name: '\u200B', value: '\u200B' },
                     { value: 'You can also combine the various options e.g. **!campaign campaign 2 week 1**' }
                 );
+                //.setImage();
+                /*
             textToImage.generate('Lorem ipsum dolor sit amet').then(function (dataUri) {
                 console.log(dataUri);
             });
+            */
+
+            const image = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADoAAAAdCAIAAAB0cOjxAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAFMSURBVFhH7Za7jcQgFEW3kA23GiJqIaAWSy4FUQruYANEYFlC8vAH4xmGADwfcfUSeM/DAS4MP/tHaeD21MDtqYHbU1+Eu4K//99S8GlxpVephLshyEEIjxh7oCBNcBezLnBlrl1QtRnYzBUumKVrN9TAfYorySyi16GYaFaZFXCkCzYUemII4j45qw2unKAZSUFggbCuzIoJTgsEgDar5+DrXQrN2+NlboF7J7XYZfPrVN7ua81wJPOy9Yiaxhvh2sHCVoYw9gj10QxU5livwL0fSf3hqAGcGPQFuFWDaTFla3cu/SeX4j7wblH2Jqk7iAc1wHW+PKXU7vsdp+Kw+/kM6yfcAje57TlIzlkkoCLNWgcnPxWubZNVTxHXf1YbXCVJcHgGqYEV2caSBxCjq5+Dzpq/tFTe0CpwwRXVuO+hgdtTA7enPgp3328/d2HWPsnfBwAAAABJRU5ErkJggg==';
+            
+            const imageStream = new Buffer.from(image, 'base64');
+            attachment = new discord.MessageAttachment(imageStream, 'test.png');
+            
             replyToPerson = false;
             break;
         
@@ -128,7 +138,11 @@ bot.on('message', async message => {
                 if(typeof replies[i] === "string") {
                     replyMessage = await message.channel.send(replies[i], { split: true });
                 } else {
-                    replyMessage = await message.channel.send(replies[i]);
+                    if(attachment == null){
+                        replyMessage = await message.channel.send(replies[i]);
+                    } else {
+                        replyMessage = await message.channel.send(replies[i], attachment);
+                    }
                 }
             }
         }
