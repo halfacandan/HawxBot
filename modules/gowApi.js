@@ -4,7 +4,7 @@ module.exports = {
         let json = await MakeApiGetCallAsync(endpointPath);
         var about = "";
         for(var i=0; i < json.commands.length; i++){
-            about += `**${json[i].command}** - ${json[i].description}\n`;
+            about += `**${json.commands[i].command}** - ${json.commands[i].description}\n`;
         }
         return about;
     },
