@@ -66,6 +66,26 @@ bot.on('message', async message => {
             reply = data.messages;
             replyToPerson = false;
             break;
+        
+        default:
+            hawxCommands = await gowApi.ListHawxCommands();
+            for(var i=0; i < json.commands.length; i++){
+                let hawxCommand = json.commands[i];
+
+                // Try to match a command
+                if(hawxCommand.command == parsedMessage.Command){
+                    // Check for help argument
+                    if(parsedMessage.Arguments.length > 0 && parsedMessage.Arguments[0].toLowerCase() =="help") {
+                        reply = hawxCommand.help;
+                    } else {
+                        // If no arguments are specified then just show the latest data
+                        if(parsedMessage.Arguments.length == 0) parsedMessage.Arguments = array("latest");
+                        let hawxApiUrl = "v1/hawx" + parsedMessage.Arguments.join("/");
+                        reply = await gowApi.GetHawxCommandItems(hawxApiUrl);
+                    }
+                }
+            }
+            break;
     }
 
     // Post the reply

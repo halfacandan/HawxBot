@@ -8,6 +8,26 @@ module.exports = {
         }
         return about;
     },
+    ListHawxCommands: async function (){
+        const endpointPath = "v1/hawx";
+        let json = await MakeApiGetCallAsync(endpointPath);
+        return json;
+    },
+    GetHawxCommandItems: async function (endpointPath){
+        let json = await MakeApiGetCallAsync(endpointPath);
+
+        var messages = array();
+        if(json == null) {
+            messages.push("**\*Blip\*** *\*Blip\** ***\*Blip\**** End of Cheese Error");
+        } else {
+            for(var i=0; i < json.items.length; i++){
+                messages.push(json.items[i].title.replace("_", " "));
+                messages.push(json.items[i].url);
+            }
+        }
+
+        return messages;
+    },
     GetLatestCampaignTasks: async function (){
         const endpointPath = "v1/game/campaigntasks/latest";
         let json = await MakeApiGetCallAsync(endpointPath);
