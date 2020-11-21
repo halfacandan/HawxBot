@@ -90,15 +90,18 @@ bot.on('message', async message => {
                 )
                 .setImage('attachment://test.png');
             
-            let asciiTable = "Filters  | Example Command       | Valid Values       \n" +
+            let asciiTable = "Filters  | Example Command       | Valid Values         \n" +
                              "---------|-----------------------|----------------------\n" +
                              "campaign | !campaign campaign 2  | 2                    \n" +
                              "week     | !campaign week 1      | 1, 2, 3, 4, 5, 6, 7  \n";
             
             let image = await textToImage.generate(asciiTable, {
-                "fontFamily": "Courier",
+                "fontFamily": "Roboto Mono",
+                "fontSize": 12,
                 "textColor": "#89aebe",
-                "bgColor": "#2f3136" // Discord dark Gray                
+                "bgColor": "#2f3136", // Discord dark Gray
+                "maxWidth": 720,
+                "margin": 5
             });
         
             const imageStream = new Buffer.from(image.split(",")[1], 'base64');
