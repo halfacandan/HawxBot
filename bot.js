@@ -13,7 +13,7 @@ bot.on('ready', () => {
     botName = bot.user.username;
 
     bot.user.setStatus('online');
-    bot.user.setActivity('Type !helpmehawx');
+    bot.user.setActivity('Type !helpmehawx', { type: 'LISTENING' });
 
     console.log(`${botName} is online`);
 });
