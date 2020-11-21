@@ -86,6 +86,7 @@ bot.on('message', async message => {
                     { name: '\u200B', value: '\u200B' },
                     { value: 'You can also combine the various options e.g. **!campaign campaign 2 week 1**' }
                 );
+            replyToPerson = false;
             break;
         
         default:
