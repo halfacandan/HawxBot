@@ -33,21 +33,20 @@ bot.on('message', async message => {
 
     // Define the reply
     var data = null;
-    var reply = null;
-    var attachments = null;
+    var replies = Array();
     var reactions = null;
     var replyToPerson = true;
 
     switch (parsedMessage.Command) {
         case '!about':
-            reply = await messages.AboutThisBot();
+            replies.push(await messages.AboutThisBot());
             break;
 
         /*
         case '!campaign':
             data = await gowApi.GetLatestCampaignTasks();
             if(data == null) return;
-            reply = data.messages;
+            replies.push(data.messages);
             replyToPerson = false;
             break;
         */
@@ -56,21 +55,21 @@ bot.on('message', async message => {
             staticCommands = await messages.ListBotCommands();
             dynamicCommands = await gowApi.AboutHawxCommands();
 
-            reply = staticCommands.replace("[HawxCommands]", dynamicCommands);
+            replies.push(staticCommands.replace("[HawxCommands]", dynamicCommands));
 
             break;
 
         case '!patchnotes':
             data = await gowApi.GetLatestPatchNote();
             if(data == null) return;
-            reply = data.messages;
+            replies.push(data.messages);
             replyToPerson = false;
             break;
 
         case '!patchnotesmajor':
             data = await gowApi.GetLatestMajorPatchNote();
             if(data == null) return;
-            reply = data.messages;
+            replies.push(data.messages);
             replyToPerson = false;
             break;
 
@@ -116,13 +115,13 @@ bot.on('message', async message => {
                 if(hawxCommand.command == parsedMessage.Command){
                     // Check for help argument
                     if(parsedMessage.Arguments.length > 0 && parsedMessage.Arguments[0].toLowerCase() =="help") {
-                        reply = hawxCommand.help;
+                        replies.push(hawxCommand.help);
                     } else {
                         // If no arguments are specified then just show the latest data
                         if(parsedMessage.Arguments.length == 0) parsedMessage.Arguments = Array("latest");
                         let hawxApiUrl = hawxCommand.links.href + "/" + parsedMessage.Arguments.join("/");
 
-                        reply = await gowApi.GetHawxCommandItems(hawxApiUrl);
+                        replies.push(await gowApi.GetHawxCommandItems(hawxApiUrl));
                         replyToPerson = false;
                     }
                 }
@@ -131,23 +130,28 @@ bot.on('message', async message => {
     }
 
     // Post the reply
-    if(reply != null){
-        var replyMessage;
-        if(replyToPerson || message.channel == null){
-            replyMessage = await message.reply("\n" + reply);
-        } else {
-            replies = Array.isArray(reply) ? reply : Array(reply);
-            for(var i=0; i < replies.length; i++){
+    if(replies != null){
+        
+        var finalReplyMessage;
+
+        for(var i=0; i < replies.length; i++){
+
+            if(replyToPerson || message.channel == null){
+                if(typeof replies[i] === "string") replies[i] = "\n" + replies[i];
+                finalReplyMessage = await message.reply(replies[i]);
+            } else {
                 console.log(typeof replies[i]);
                 if(typeof replies[i] === "string") {
-                    replyMessage = await message.channel.send(replies[i], { split: true });
+                    finalReplyMessage = await message.channel.send(replies[i], { split: true });
                 } else {
-                    replyMessage = await message.channel.send(replies[i]);
-                }
+                    finalReplyMessage = await message.channel.send(replies[i]);
+                }                
             }
         }
-        replyMessage = Array.isArray(replyMessage) ? replyMessage[0] : replyMessage;
-        await helpers.reactAsync(bot, replyMessage, reactions);
+
+        if(reactions != null){
+            await helpers.reactAsync(bot, finalReplyMessage, reactions);
+        }
     }
 });
 
