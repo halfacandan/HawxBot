@@ -1,6 +1,7 @@
 const helpers = require('./modules/helpers.js');
 const messages = require('./modules/messages.js');
 const gowApi = require('./modules/gowApi.js');
+require('typeface-roboto-mono');
 const textToImage = require('text-to-image');
 const discord = require('discord.js');
 const bot = new discord.Client();
@@ -97,7 +98,7 @@ bot.on('message', async message => {
             
             let image = await textToImage.generate(asciiTable, {
                 "fontFamily": "Roboto Mono",
-                "fontSize": 12,
+                "fontSize": 16,
                 "textColor": "#89aebe",
                 "bgColor": "#2f3136", // Discord dark Gray
                 "maxWidth": 720,
