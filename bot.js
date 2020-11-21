@@ -13,7 +13,7 @@ bot.on('ready', () => {
     botName = bot.user.username;
 
     bot.user.setStatus('online');
-    bot.user.setActivity('Type !helpmehawx', { type: 'LISTENING' });
+    bot.user.setActivity('!helpmehawx', { type: 'LISTENING' });
 
     console.log(`${botName} is online`);
 });
@@ -71,6 +71,21 @@ bot.on('message', async message => {
             if(data == null) return;
             reply = data.messages;
             replyToPerson = false;
+            break;
+
+        case '!test':
+            reply = new Discord.MessageEmbed()
+                .setTitle('Help with !campaign')
+                .setDescription('Get the latest campaign task.')
+                .addFields(
+                    { value: 'You can return specific data using these options:' },
+                    { name: '\u200B', value: '\u200B' },
+                    { name: 'Option', value: 'campaign\nweek', inline: true },
+                    { name: 'Example Command', value: '!campaign campaign 2\n!campaign week 1', inline: true },
+                    { name: 'Valid Values', value: '2\n1, 2, 3, 4, 5, 6, 7 ', inline: true },
+                    { name: '\u200B', value: '\u200B' },
+                    { value: 'You can also combine the various options e.g. **!campaign campaign 2 week 1**' }
+                );
             break;
         
         default:
