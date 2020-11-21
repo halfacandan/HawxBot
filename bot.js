@@ -150,7 +150,10 @@ bot.on('message', async message => {
                     if(attachments == null){
                         replyMessage = await message.channel.send(replies[i]);
                     } else {
-                        replyMessage = await message.channel.send(replies[i], attachments);
+                        replyMessage = await message.channel.send({ 
+                            embed: replies[i] , 
+                            files: attachments 
+                        });
                     }
                 }
             }
