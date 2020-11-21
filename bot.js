@@ -50,7 +50,7 @@ bot.on('message', async message => {
 
             data = await gowApi.GetLatestCampaignTasks();
             if(data == null) return;
-            replies.concat(data.messages);
+            replies = data.messages;
             replyToPerson = false;
             break;
         */
@@ -69,7 +69,7 @@ bot.on('message', async message => {
             if(message.channel != null) message.channel.startTyping();
 
             data = await gowApi.GetLatestPatchNote();
-            replies.concat(data.messages);
+            replies = data.messages;
             replyToPerson = false;
             break;
 
@@ -77,7 +77,7 @@ bot.on('message', async message => {
             if(message.channel != null) message.channel.startTyping();
 
             data = await gowApi.GetLatestMajorPatchNote();
-            replies.concat(data.messages);
+            replies = data.messages;
             replyToPerson = false;
             break;
 
@@ -129,9 +129,8 @@ bot.on('message', async message => {
                         // If no arguments are specified then just show the latest data
                         if(parsedMessage.Arguments.length == 0) parsedMessage.Arguments = Array("latest");
                         let hawxApiUrl = hawxCommand.links.href + "/" + parsedMessage.Arguments.join("/");
-                        let messages = await gowApi.GetHawxCommandItems(hawxApiUrl);
+                        replies = await gowApi.GetHawxCommandItems(hawxApiUrl);
 
-                        replies.concat(messages);
                         replyToPerson = false;
                     }
                 }

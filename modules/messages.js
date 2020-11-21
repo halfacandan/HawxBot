@@ -40,7 +40,7 @@ module.exports = {
             
             const PxPerChar = 10;
             const MarginPx = 5;
-            let maxCharsPerRow = Math.max(...(messageObj.table.split("\n").map(el => el.length)));
+            let maxCharsPerRow = Math.max(...(messageObj.table.split("\n").map(el => el.length))) + 2;
                 
             let image = await textToImage.generate(messageObj.table, {
                 "fontFamily": "Courier",
