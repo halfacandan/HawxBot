@@ -11,9 +11,11 @@ var botName;
 bot.on('ready', () => {
 
     botName = bot.user.username;
-    console.log(`${botName} is online`);
 
-    bot.user.setStatus('online', 'Use **!helpmehawx**') 
+    bot.user.setStatus('online');
+    bot.user.setActivity('Type !helpmehawx');
+
+    console.log(`${botName} is online`);
 });
 
 bot.on('message', async message => {
