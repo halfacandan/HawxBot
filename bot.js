@@ -102,14 +102,14 @@ bot.on('message', async message => {
                                  "week     | !campaign week 1      | 1, 2, 3, 4, 5, 6, 7  "
                     }
                 ]
-            }
+            };
 
             for(var i = 0; i < messageObj.messages.length; i++){
                 replies.push(
                     await messages.CreateEmbeddedMessage(discord, messageObj.messages[i])
                 );
             }
-            replyToPerson = false;
+            //replyToPerson = false;
 
             break;
         
@@ -129,7 +129,16 @@ bot.on('message', async message => {
                         // If no arguments are specified then just show the latest data
                         if(parsedMessage.Arguments.length == 0) parsedMessage.Arguments = Array("latest");
                         let hawxApiUrl = hawxCommand.links.href + "/" + parsedMessage.Arguments.join("/");
-                        replies = await gowApi.GetHawxCommandItems(hawxApiUrl);
+                        
+                        let messageObj = await gowApi.GetHawxCommandItems(hawxApiUrl);
+                        for(var i = 0; i < messageObj.messages.length; i++){
+                            if(typeof messageObj.messages[i] === "string"){
+                                replies.push(messageObj.messages[i]);
+                            }
+                            replies.push(
+                                await messages.CreateEmbeddedMessage(discord, messageObj.messages[i])
+                            );
+                        }
 
                         replyToPerson = false;
                     }
@@ -138,33 +147,7 @@ bot.on('message', async message => {
             break;
     }
 
-    // Post the reply
-    console.log(replies);
-    if(replies != null){
-        
-        var finalReplyMessage;
-
-        for(var i=0; i < replies.length; i++){
-
-            if(replyToPerson || message.channel == null){
-                if(typeof replies[i] === "string") replies[i] = "\n" + replies[i];
-                finalReplyMessage = await message.reply(replies[i]);
-            } else {
-                console.log(typeof replies[i]);
-                if(typeof replies[i] === "string") {
-                    finalReplyMessage = await message.channel.send(replies[i], { split: true });
-                } else {
-                    finalReplyMessage = await message.channel.send(replies[i]);
-                }                
-            }
-        }
-
-        if(reactions != null){
-            await helpers.reactAsync(bot, finalReplyMessage, reactions);
-        }
-    }
-
-    if(message.channel != null) message.channel.stopTyping();
+    await messsages.SendReplies(replies, replyToPerson, userMessage);
 });
 
 // Login to Discord as the Bot

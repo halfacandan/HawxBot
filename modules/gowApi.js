@@ -14,19 +14,29 @@ module.exports = {
         return json;
     },
     GetHawxCommandItems: async function (endpointPath){
+        
         let json = await MakeApiGetCallAsync(endpointPath);
 
-        var messages = Array();
+        var messageObj = { 
+            "messages": []
+        };
+
         if(json == null || json.items.length < 1) {
-            messages.push("**\\*Blip\\*** *\\*Blip\\** ***\\*Blip\\**** End of Cheese Error");
+            messageObj.messages.push({
+                "type": "Text",
+                "content": "**\\*Blip\\*** *\\*Blip\\** ***\\*Blip\\**** End of Cheese Error"
+            });
         } else {
             for(var i=0; i < json.items.length; i++){
-                messages.push(json.items[i].title.replace(/_/g, " "));
-                messages.push(json.items[i].url);
+                messageObj.messages.push({
+                    "type": "Embedded",
+                    "title": json.items[i].title.replace(/_/g, " "),
+                    "image": json.items[i].url
+                });
             }
         }
 
-        return messages;
+        return messageObj;
     },
     GetLatestCampaignTasks: async function (){
         const endpointPath = "v1/game/campaigntasks/latest";

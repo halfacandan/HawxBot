@@ -21,7 +21,11 @@ module.exports = {
 
         const textToImage = require('text-to-image');
 
-        embeddedMessage = new discord.MessageEmbed().setTitle(messageObj.title).setDescription(messageObj.description);
+        embeddedMessage = new discord.MessageEmbed().setTitle(messageObj.title);
+        
+        if(messageObj.description != null){
+            embeddedMessage.setDescription(messageObj.description);
+        }
         
         if(messageObj.sections != null){
             for(var i = 0; i < messageObj.sections.length; i++){
@@ -64,5 +68,33 @@ module.exports = {
         }
         
         return message;
+    },
+    SendReplies: async function(replies, replyToPerson, userMessage){
+        
+        if(replies != null){
+            
+            var finalReplyMessage;
+
+            for(var i=0; i < replies.length; i++){
+
+                if(replyToPerson || userMessage.channel == null){
+                    if(typeof replies[i] === "string") replies[i] = "\n" + replies[i];
+                    finalReplyMessage = await userMessage.reply(replies[i]);
+                } else {
+                    console.log(typeof replies[i]);
+                    if(typeof replies[i] === "string") {
+                        finalReplyMessage = await userMessage.channel.send(replies[i], { split: true });
+                    } else {
+                        finalReplyMessage = await userMessage.channel.send(replies[i]);
+                    }                
+                }
+            }
+
+            if(reactions != null){
+                await helpers.reactAsync(bot, finalReplyMessage, reactions);
+            }
+        }
+
+        if(userMessage.channel != null) userMessage.channel.stopTyping();
     }
 }
