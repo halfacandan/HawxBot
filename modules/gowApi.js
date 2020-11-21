@@ -14,7 +14,6 @@ module.exports = {
         return json;
     },
     GetHawxCommandItems: async function (endpointPath){
-        console.log("GetHawxCommandItems");
         let json = await MakeApiGetCallAsync(endpointPath);
 
         var messages = Array();
@@ -51,7 +50,7 @@ const request = require('request');
 function MakeApiGetCallAsync(endpointPath, jwtToken =  null) {
 
     const apiEndpoint = new URL(endpointPath, process.env.API_ENDPOINT_BASE).href;
-    console.log(apiEndpoint);
+    console.log("GET:" + apiEndpoint);
 
     const options = {
         url: apiEndpoint,
@@ -78,6 +77,7 @@ function MakeApiGetCallAsync(endpointPath, jwtToken =  null) {
 function MakeApiPostCallAsync(endpointPath, jwtToken = null, postData = null) {
 
     const apiEndpoint = new URL(endpointPath, process.env.API_ENDPOINT_BASE).href;
+    console.log("POST:" + apiEndpoint);
 
     const options = {
         url: apiEndpoint,
