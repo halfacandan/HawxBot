@@ -18,11 +18,11 @@ module.exports = {
         let json = await MakeApiGetCallAsync(endpointPath);
 
         var messages = Array();
-        if(json == null) {
+        if(json == null || json.items.length < 1) {
             messages.push("**\\*Blip\\*** *\\*Blip\\** ***\\*Blip\\**** End of Cheese Error");
         } else {
             for(var i=0; i < json.items.length; i++){
-                messages.push(json.items[i].title.replace("_", " "));
+                messages.push(json.items[i].title.replace(/_/g, " "));
                 messages.push(json.items[i].url);
             }
         }
