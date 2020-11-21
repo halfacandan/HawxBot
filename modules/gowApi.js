@@ -1,4 +1,13 @@
 module.exports = {
+    AboutHawxCommands: async function (){
+        const endpointPath = "v1/hawx";
+        let json = await MakeApiGetCallAsync(endpointPath);
+        var about = "";
+        for(var i=0; i < json.commands.length; i++){
+            about += `**${json[i].command}** - ${json[i].description}\n`;
+        }
+        return about;
+    },
     GetLatestCampaignTasks: async function (){
         const endpointPath = "v1/game/campaigntasks/latest";
         let json = await MakeApiGetCallAsync(endpointPath);

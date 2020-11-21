@@ -46,7 +46,11 @@ bot.on('message', async message => {
             break;
     
         case '!helpmehawx':
-            reply = await messages.ListBotCommands();
+            staticCommands = await messages.ListBotCommands();
+            dynamicCommands = await gowApi.AboutHawxCommands();
+
+            reply = staticCommands.replace("[HawxCommands]", dynamicCommands);
+
             break;
 
         case '!patchnotes':
