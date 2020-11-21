@@ -87,7 +87,7 @@ bot.on('message', async message => {
             let messageObj = {
                 "messages": [
                     {
-                        "type": "Embedded",
+                        "type": "EmbeddedMessage",
                         "title": "Help with !campaign",
                         "description": "Get the latest campaign task.",
                         "sections": [
@@ -125,7 +125,8 @@ bot.on('message', async message => {
 
                     // Check for help argument
                     if(parsedMessage.Arguments.length > 0 && parsedMessage.Arguments[0].toLowerCase() =="help") {
-                        replies.push(hawxCommand.help);
+                        let helpMessage = await messages.CreateEmbeddedMessage(discord, hawxCommand.help);
+                        replies.push(helpMessage);                        
                     } else {
                         // If no arguments are specified then just show the latest data
                         if(parsedMessage.Arguments.length == 0) parsedMessage.Arguments = Array("latest");
