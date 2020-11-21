@@ -144,7 +144,7 @@ bot.on('message', async message => {
                 if(typeof replies[i] === "string") {
                     replyMessage = await message.channel.send(replies[i], { split: true });
                 } else {
-                    if(attachment == null){
+                    if(attachments == null){
                         replyMessage = await message.channel.send(replies[i]);
                     } else {
                         replyMessage = await message.channel.send(replies[i], attachments);
