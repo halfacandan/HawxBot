@@ -1,6 +1,7 @@
 const helpers = require('./modules/helpers.js');
 const messages = require('./modules/messages.js');
 const gowApi = require('./modules/gowApi.js');
+const textToImage = require('text-to-image');
 const discord = require('discord.js');
 const bot = new discord.Client();
 
@@ -86,6 +87,9 @@ bot.on('message', async message => {
                     { name: '\u200B', value: '\u200B' },
                     { value: 'You can also combine the various options e.g. **!campaign campaign 2 week 1**' }
                 );
+            textToImage.generate('Lorem ipsum dolor sit amet').then(function (dataUri) {
+                console.log(dataUri);
+            });
             replyToPerson = false;
             break;
         
