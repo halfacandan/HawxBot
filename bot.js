@@ -46,7 +46,7 @@ bot.on('message', async message => {
         case '!campaign':
             data = await gowApi.GetLatestCampaignTasks();
             if(data == null) return;
-            replies.push(data.messages);
+            replies.concat(data.messages);
             replyToPerson = false;
             break;
         */
@@ -62,14 +62,14 @@ bot.on('message', async message => {
         case '!patchnotes':
             data = await gowApi.GetLatestPatchNote();
             if(data == null) return;
-            replies.push(data.messages);
+            replies.concat(data.messages);
             replyToPerson = false;
             break;
 
         case '!patchnotesmajor':
             data = await gowApi.GetLatestMajorPatchNote();
             if(data == null) return;
-            replies.push(data.messages);
+            replies.concat(data.messages);
             replyToPerson = false;
             break;
 
@@ -98,7 +98,7 @@ bot.on('message', async message => {
 
             for(var i = 0; i < messageObj.messages.length; i++){
                 replies.push(
-                    await helpers.CreateEmbeddedMessage(messageObj.messages[i])
+                    await messages.CreateEmbeddedMessage(messageObj.messages[i])
                 );
             }
             replyToPerson = false;
