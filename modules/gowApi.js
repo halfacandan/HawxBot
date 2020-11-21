@@ -10,18 +10,16 @@ module.exports = {
     },
     ListHawxCommands: async function (){
         const endpointPath = "v1/hawx";
-console.log("ListHawxCommands");
         let json = await MakeApiGetCallAsync(endpointPath);
-console.log(json);
         return json;
     },
     GetHawxCommandItems: async function (endpointPath){
         console.log("GetHawxCommandItems");
         let json = await MakeApiGetCallAsync(endpointPath);
-console.log(json);
+
         var messages = Array();
         if(json == null) {
-            messages.push("**\*Blip\*** *\*Blip\** ***\*Blip\**** End of Cheese Error");
+            messages.push("**\\*Blip\\*** *\\*Blip\\** ***\\*Blip\\**** End of Cheese Error");
         } else {
             for(var i=0; i < json.items.length; i++){
                 messages.push(json.items[i].title.replace("_", " "));
@@ -53,7 +51,8 @@ const request = require('request');
 function MakeApiGetCallAsync(endpointPath, jwtToken =  null) {
 
     const apiEndpoint = new URL(endpointPath, process.env.API_ENDPOINT_BASE).href;
-console.log(apiEndpoint);
+    console.log(apiEndpoint);
+
     const options = {
         url: apiEndpoint,
         json: true,
