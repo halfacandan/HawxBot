@@ -39,14 +39,14 @@ bot.on('message', async message => {
 
     switch (parsedMessage.Command) {
         case '!about':
-            if(message.channel != null) message.channel.stopTyping();
+            if(message.channel != null) message.channel.startTyping();
 
             replies.push(await messages.AboutThisBot());
             break;
 
         /*
         case '!campaign':
-            if(message.channel != null) message.channel.stopTyping();
+            if(message.channel != null) message.channel.startTyping();
 
             data = await gowApi.GetLatestCampaignTasks();
             if(data == null) return;
@@ -56,7 +56,7 @@ bot.on('message', async message => {
         */
 
         case '!helpmehawx':
-            if(message.channel != null) message.channel.stopTyping();
+            if(message.channel != null) message.channel.startTyping();
 
             staticCommands = await messages.ListBotCommands();
             dynamicCommands = await gowApi.AboutHawxCommands();
@@ -66,7 +66,7 @@ bot.on('message', async message => {
             break;
 
         case '!patchnotes':
-            if(message.channel != null) message.channel.stopTyping();
+            if(message.channel != null) message.channel.startTyping();
 
             data = await gowApi.GetLatestPatchNote();
             if(data == null) return;
@@ -75,7 +75,7 @@ bot.on('message', async message => {
             break;
 
         case '!patchnotesmajor':
-            if(message.channel != null) message.channel.stopTyping();
+            if(message.channel != null) message.channel.startTyping();
 
             data = await gowApi.GetLatestMajorPatchNote();
             if(data == null) return;
@@ -84,7 +84,7 @@ bot.on('message', async message => {
             break;
 
         case '!test':
-            if(message.channel != null) message.channel.stopTyping();
+            if(message.channel != null) message.channel.startTyping();
 
             let messageObj = {
                 "messages": [
@@ -116,7 +116,7 @@ bot.on('message', async message => {
             break;
         
         default:
-            if(message.channel != null) message.channel.stopTyping();
+            if(message.channel != null) message.channel.startTyping();
 
             hawxCommands = await gowApi.ListHawxCommands();
             for(var i=0; i < hawxCommands.commands.length; i++){
@@ -141,6 +141,7 @@ bot.on('message', async message => {
     }
 
     // Post the reply
+    console.log(replies);
     if(replies != null){
         
         var finalReplyMessage;

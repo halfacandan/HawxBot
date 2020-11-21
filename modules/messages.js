@@ -41,7 +41,7 @@ module.exports = {
             const PxPerChar = 10;
             let maxCharsPerRow = Math.max(...(messageObj.table.split("\n").map(el => el.length)));
                 
-            let image = await textToImage.generate(asciiTable, {
+            let image = await textToImage.generate(messageObj.table, {
                 "fontFamily": "Courier",
                 "fontSize": 16, // 16 = Approx 10px width per character
                 "textColor": "#98b1b8", // Discord Light Gray
