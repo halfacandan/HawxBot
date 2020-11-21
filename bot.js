@@ -102,7 +102,7 @@ bot.on('message', async message => {
             });
         
             const imageStream = new Buffer.from(image.split(",")[1], 'base64');
-            attachments = Aray(new discord.MessageAttachment(imageStream, 'test.png'));
+            attachments = Array(new discord.MessageAttachment(imageStream, 'test.png'));
             
 // Don't break...just send the message here.
 
