@@ -12,7 +12,6 @@ module.exports = {
 
         message =   "**!about** - Info on how to add new functionality to HawxBot\n" +
                     "[HawxCommands]" +
-                    "**!campaign** - Show Hawx's latest campaign task list\n" +
                     "**!patchnotes** - Gets the latest patch note\n" +
                     "**!patchnotesmajor** - Gets the latest Major patch note and notes for any subsequent Minor patches\n";
         

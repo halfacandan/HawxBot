@@ -38,13 +38,15 @@ bot.on('message', async message => {
             reply = await messages.AboutThisBot();
             break;
 
+        /*
         case '!campaign':
             data = await gowApi.GetLatestCampaignTasks();
             if(data == null) return;
             reply = data.messages;
             replyToPerson = false;
             break;
-    
+        */
+
         case '!helpmehawx':
             staticCommands = await messages.ListBotCommands();
             dynamicCommands = await gowApi.AboutHawxCommands();
