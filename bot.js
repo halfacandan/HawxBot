@@ -35,7 +35,7 @@ bot.on('message', async message => {
     // Define the reply
     var data = null;
     var reply = null;
-    var attachment = null;
+    var attachments = null;
     var reactions = null;
     var replyToPerson = true;
 
@@ -89,13 +89,23 @@ bot.on('message', async message => {
                     { value: 'You can also combine the various options e.g. **!campaign campaign 2 week 1**' }
                 )
                 .setImage('attachment://test.png');
-                
-            let image = await textToImage.generate('Lorem ipsum dolor sit amet');
+            
+            let asciiTable = "Filters  | Example Command       | Valid Values       \n" +
+                             "---------|-----------------------|----------------------\n" +
+                             "campaign | !campaign campaign 2  | 2                    \n" +
+                             "week     | !campaign week 1      | 1, 2, 3, 4, 5, 6, 7  \n";
+            
+            let image = await textToImage.generate(asciiTable, {
+                "fontFamily": "Courier",
+                "textColor": "#89aebe",
+                "bgColor": "#2f3136" // Discord dark Gray                
+            });
         
             const imageStream = new Buffer.from(image.split(",")[1], 'base64');
-            attachment = new discord.MessageAttachment(imageStream, 'test.png');
-            //attachment = new discord.MessageAttachment('data:image/png;base64,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', 'test.png');
+            attachments = Aray(new discord.MessageAttachment(imageStream, 'test.png'));
             
+// Don't break...just send the message here.
+
             replyToPerson = false;
             break;
         
