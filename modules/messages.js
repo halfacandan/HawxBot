@@ -17,7 +17,7 @@ module.exports = {
         
         return message;
     },
-    CreateEmbeddedMessage: async function(messageObj){
+    CreateEmbeddedMessage: async function(discord, messageObj){
 
         const textToImage = require('text-to-image');
 

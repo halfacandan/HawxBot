@@ -39,11 +39,15 @@ bot.on('message', async message => {
 
     switch (parsedMessage.Command) {
         case '!about':
+            if(message.channel != null) message.channel.stopTyping();
+
             replies.push(await messages.AboutThisBot());
             break;
 
         /*
         case '!campaign':
+            if(message.channel != null) message.channel.stopTyping();
+
             data = await gowApi.GetLatestCampaignTasks();
             if(data == null) return;
             replies.concat(data.messages);
@@ -52,6 +56,8 @@ bot.on('message', async message => {
         */
 
         case '!helpmehawx':
+            if(message.channel != null) message.channel.stopTyping();
+
             staticCommands = await messages.ListBotCommands();
             dynamicCommands = await gowApi.AboutHawxCommands();
 
@@ -60,6 +66,8 @@ bot.on('message', async message => {
             break;
 
         case '!patchnotes':
+            if(message.channel != null) message.channel.stopTyping();
+
             data = await gowApi.GetLatestPatchNote();
             if(data == null) return;
             replies.concat(data.messages);
@@ -67,6 +75,8 @@ bot.on('message', async message => {
             break;
 
         case '!patchnotesmajor':
+            if(message.channel != null) message.channel.stopTyping();
+
             data = await gowApi.GetLatestMajorPatchNote();
             if(data == null) return;
             replies.concat(data.messages);
@@ -74,7 +84,7 @@ bot.on('message', async message => {
             break;
 
         case '!test':
-            message.channel.startTyping();
+            if(message.channel != null) message.channel.stopTyping();
 
             let messageObj = {
                 "messages": [
@@ -98,15 +108,16 @@ bot.on('message', async message => {
 
             for(var i = 0; i < messageObj.messages.length; i++){
                 replies.push(
-                    await messages.CreateEmbeddedMessage(messageObj.messages[i])
+                    await messages.CreateEmbeddedMessage(discord, messageObj.messages[i])
                 );
             }
             replyToPerson = false;
 
-            message.channel.stopTyping();
             break;
         
         default:
+            if(message.channel != null) message.channel.stopTyping();
+
             hawxCommands = await gowApi.ListHawxCommands();
             for(var i=0; i < hawxCommands.commands.length; i++){
                 let hawxCommand = hawxCommands.commands[i];
@@ -121,7 +132,7 @@ bot.on('message', async message => {
                         if(parsedMessage.Arguments.length == 0) parsedMessage.Arguments = Array("latest");
                         let hawxApiUrl = hawxCommand.links.href + "/" + parsedMessage.Arguments.join("/");
 
-                        replies.push(await gowApi.GetHawxCommandItems(hawxApiUrl));
+                        replies.concat(await gowApi.GetHawxCommandItems(hawxApiUrl));
                         replyToPerson = false;
                     }
                 }
@@ -152,6 +163,8 @@ bot.on('message', async message => {
         if(reactions != null){
             await helpers.reactAsync(bot, finalReplyMessage, reactions);
         }
+
+        if(message.channel != null) message.channel.stopTyping();
     }
 });
 
