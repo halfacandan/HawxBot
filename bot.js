@@ -105,8 +105,11 @@ bot.on('message', async message => {
             };
 
             for(var i = 0; i < messageObj.messages.length; i++){
+
+                let testMessage = await messages.CreateEmbeddedMessage(discord, messageObj.messages[i]);
+                testMessage.content = "https://gemsofwar.com/wp-content/uploads/2020/11/blog_banner_525.jpg";
                 replies.push(
-                    await messages.CreateEmbeddedMessage(discord, messageObj.messages[i])
+                    testMessage
                 );
             }
             //replyToPerson = false;
