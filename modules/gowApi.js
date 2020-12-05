@@ -57,7 +57,7 @@ module.exports = {
 
 const request = require('request');
 
-function MakeApiGetCallAsync(endpointPath, jwtToken =  null) {
+function MakeApiGetCallAsync(endpointPath, jwtToken = null) {
 
     const apiEndpoint = new URL(endpointPath, process.env.API_ENDPOINT_BASE).href;
     console.log("GET:" + apiEndpoint);

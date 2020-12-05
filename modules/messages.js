@@ -20,7 +20,7 @@ module.exports = {
     CreateEmbeddedMessage: async function(discord, messageObj){
 
         const textToImage = require('text-to-image');
-
+        
         var embeddedMessage = new discord.MessageEmbed().setTitle(messageObj.title);
         var attachments = null;
 
@@ -63,7 +63,6 @@ module.exports = {
             embeddedMessage.setImage(`attachment://${imageName}.png`);
         }
 
-
         if(attachments == null){
             return embeddedMessage;
         } else {
@@ -85,7 +84,6 @@ module.exports = {
                     if(typeof replies[i] === "string") replies[i] = "\n" + replies[i];
                     finalReplyMessage = await userMessage.reply(replies[i]);
                 } else {
-                    console.log(typeof replies[i]);
                     if(typeof replies[i] === "string") {
                         finalReplyMessage = await userMessage.channel.send(replies[i], { split: true });
                     } else {
