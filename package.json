@@ -16,7 +16,7 @@
         "jsonwebtoken": "^8.5.1",
         "match-all": "^1.2.6",
         "node-fetch": "^2.6.0",
-        "request": "2.81.0",
-        "text-to-image": "^2.4.4"
+        "request": "^2.81.0",
+        "text2png": "^2.3.0"
     }
 }

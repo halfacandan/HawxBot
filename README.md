@@ -12,8 +12,6 @@ https://discordapp.com/oauth2/authorize?&client_id=777985751258234920&scope=bot&
 | !about           | Info on how to add new functionality to HawxBot                                           |
 | !campaign        | Show Hawx's latest campaign task list                                                     |
 | !helpmehawx      | List all available commands                                                               |
-| !patchnotes      | Gets the latest patch note                                                                |
-| !patchnotesmajor | Gets the latest Major patch note and notes for any subsequent Minor patches               |
 
 Table created with [Tables Generator](https://www.tablesgenerator.com/markdown_tables)
 
@@ -28,4 +26,3 @@ The basic structure of the bot was taken from [Mason Spring's 'Hosting a Discord
 
 Further functionality was taken from:
 * [2020 Discord Bot Tutorial: Get your bot up and running in under 5 minutes](https://codeburst.io/discord-bot-tutorial-2020-a8a2e37e347c)
-* [Reactions in Discord.js](https://discordjs.guide/popular-topics/reactions.html#custom-emojis)

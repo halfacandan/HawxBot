@@ -1,3 +1,5 @@
+const botHelpCommand = "!hawx";
+
 const helpers = require('./modules/helpers.js');
 const messages = require('./modules/messages.js');
 const gowApi = require('./modules/gowApi.js');
@@ -13,7 +15,7 @@ bot.on('ready', () => {
     botName = bot.user.username;
 
     bot.user.setStatus('online');
-    bot.user.setActivity('!helpmehawx', { type: 'LISTENING' });
+    bot.user.setActivity(botHelpCommand, { type: 'LISTENING' });
 
     console.log(`${botName} is online`);
 });
@@ -44,18 +46,7 @@ bot.on('message', async message => {
             replies.push(await messages.AboutThisBot());
             break;
 
-        /*
-        case '!campaign':
-            if(message.channel != null) message.channel.startTyping();
-
-            data = await gowApi.GetLatestCampaignTasks();
-            if(data == null) return;
-            replies = data.messages;
-            replyToPerson = false;
-            break;
-        */
-
-        case '!helpmehawx':
+        case botHelpCommand:
             if(message.channel != null) message.channel.startTyping();
 
             staticCommands = await messages.ListBotCommands();
@@ -66,54 +57,37 @@ bot.on('message', async message => {
             break;
 
         case '!patchnotes':
+
+            // Disabled
+            return;
+
             if(message.channel != null) message.channel.startTyping();
 
             data = await gowApi.GetLatestPatchNote();
-            replies = data.messages;
+            if(data == null) {
+                replies.push(messages.BotError());
+                break;
+            }
+
+            replies = replies.concat(data.messages);
             replyToPerson = false;
             break;
 
         case '!patchnotesmajor':
+
+            // Disabled
+            return;
+
             if(message.channel != null) message.channel.startTyping();
 
             data = await gowApi.GetLatestMajorPatchNote();
-            replies = data.messages;
-            replyToPerson = false;
-            break;
-
-        case '!test':
-            if(message.channel != null) message.channel.startTyping();
-
-            let messageObj = {
-                "messages": [
-                    {
-                        "type": "EmbeddedMessage",
-                        "title": "Help with !campaign",
-                        "description": "Get the latest campaign task.",
-                        "sections": [
-                            {
-                                "title": "Options",
-                                "text": "You can return specific data using the options in the table below.\nYou can also combine the various options e.g.\n**!campaign campaign 2 week 1**"
-                            }
-                        ],
-                        "table": "Filters  | Example Command       | Valid Values         \n" +
-                                 "---------|-----------------------|----------------------\n" +
-                                 "campaign | !campaign campaign 2  | 2                    \n" +
-                                 "week     | !campaign week 1      | 1, 2, 3, 4, 5, 6, 7  "
-                    }
-                ]
-            };
-
-            for(var i = 0; i < messageObj.messages.length; i++){
-
-                let testMessage = await messages.CreateEmbeddedMessage(discord, messageObj.messages[i]);
-                testMessage.content = "https://gemsofwar.com/wp-content/uploads/2020/11/blog_banner_525.jpg";
-                replies.push(
-                    testMessage
-                );
+            if(data == null) {
+                replies.push(messages.BotError());
+                break;
             }
-            //replyToPerson = false;
 
+            replies = replies.concat(data.messages);
+            replyToPerson = false;
             break;
         
         default:
@@ -128,22 +102,14 @@ bot.on('message', async message => {
 
                     // Check for help argument
                     if(parsedMessage.Arguments.length > 0 && parsedMessage.Arguments[0].toLowerCase() =="help") {
-                        let helpMessage = await messages.CreateEmbeddedMessage(discord, hawxCommand.help);
-                        replies.push(helpMessage);                        
+                        replies.push(hawxCommand.help);                        
                     } else {
                         // If no arguments are specified then just show the latest data
                         if(parsedMessage.Arguments.length == 0) parsedMessage.Arguments = Array("latest");
                         let hawxApiUrl = hawxCommand.links.href + "/" + parsedMessage.Arguments.join("/");
                         
-                        let messageObj = await gowApi.GetHawxCommandItems(hawxApiUrl);
-                        for(var i = 0; i < messageObj.messages.length; i++){
-                            if(typeof messageObj.messages[i] === "string"){
-                                replies.push(messageObj.messages[i]);
-                            }
-                            replies.push(
-                                await messages.CreateEmbeddedMessage(discord, messageObj.messages[i])
-                            );
-                        }
+                        let data = await gowApi.GetHawxCommandItems(hawxApiUrl);
+                        replies = replies.concat(data.messages);
 
                         replyToPerson = false;
                     }
@@ -152,7 +118,7 @@ bot.on('message', async message => {
             break;
     }
 
-    await messages.SendReplies(message, replies, reactions, replyToPerson);
+    await messages.SendReplies(discord, bot, message, replies, reactions, replyToPerson);
 });
 
 // Login to Discord as the Bot

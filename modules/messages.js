@@ -1,99 +1,175 @@
+const LineBreak = "\n\uFEFF";
+
 module.exports = {
+    BotError: function(){
+        return "**\\*Blip\\*** *\\*Blip\\** ***\\*Blip\\**** End of Cheese Error";
+    },
     AboutThisBot: async function(){
 
-        message =   "This bot and the associated API are maintained by Plip. If you'd like to add some funtionality then you can:\n" +
-                    "  - Contact Plip for some help at https://community.gemsofwar.com/u/Plip.\n" +
-                    "  - Submit your own code at https://github.com/halfacandan/HawxBot\n" +
-                    `  - View the API Documentation at ${process.env.API_ENDPOINT_BASE}swagger/\n\n`
+        const BotAuthorDiscordId = '342266718334353408';
+        const BotAuthorForumUri = 'https://community.gemsofwar.com/u/Plip';
+        const BotEditorForumUri = 'https://community.gemsofwar.com/u/Hawx';
 
-        return message;
+        let embeddedMessage = {
+            "embed": {
+                "title": ":robot:  HawxBot",
+                "description": `HawxBot is a source of Gems of War user guides and resources. It is curated by [Hawx](${BotEditorForumUri})${LineBreak}`,
+                "fields": [             
+                    {
+                        "name": ":writing_hand:  Contributors",
+                        "value": `[Hawx](${BotEditorForumUri}) creates all the guides and content that HawxBot hosts. ` +
+                                 `[Plip](${BotAuthorForumUri}) writes the code that powers HawxBot. ` +
+                                 `Drop him a message on Discord (<@!${BotAuthorDiscordId}>) with your ideas for the bot.${LineBreak}`,
+                    },
+                    {
+                        "name": ":nerd:  Geek Stuff",
+                        "value": " * [View the HawxBot's node.js code](https://github.com/halfacandan/HawxBot)\n" +
+                                ` * [View Plip's GoW API Swagger Docs](${process.env.API_ENDPOINT_BASE}swagger/)`
+                    }
+                ]
+            }
+        };
+
+        return embeddedMessage;
     },
     ListBotCommands: async function(){
 
         message =   "**!about** - Info on how to add new functionality to HawxBot\n" +
-                    "[HawxCommands]" +
-                    "**!patchnotes** - Gets the latest patch note\n" +
-                    "**!patchnotesmajor** - Gets the latest Major patch note and notes for any subsequent Minor patches\n";
+                    "[HawxCommands]";
         
         return message;
     },
-    CreateEmbeddedMessage: async function(discord, messageObj){
+    FixBulletPoints: function(text){
 
-        const textToImage = require('text-to-image');
-        
-        var embeddedMessage = new discord.MessageEmbed().setTitle(messageObj.title);
+        const bulletOne = "\uFEFF\u2001\u2022 ";
+        const bulletTwo = "\uFEFF\u2001\u2001\u2043 ";
+
+        // Unordered lists
+        text = text.replace(/ \* /g, bulletOne).replace(/ \*\* /g, bulletTwo);
+        // Ordered lists
+        text = text.replace(/ ([0-9]+(?:\.|\)) )/g, "\uFEFF\u2001$1").replace(/ ([0-9]+\.[0-9]+(?:\.|\)) )/g, "\uFEFF\u2001\u2001$1");
+
+        // Fix any incorrectly-escaped \uFEFF stringification issues
+        text = text.replace("\\uFEFF", "\uFEFF");
+
+        return text;
+    },
+    ParseEmbeddedMessage: async function(discord, embeddedMessage){
+
         var attachments = null;
 
-        if(messageObj.description != null){
-            embeddedMessage.setDescription(messageObj.description);
+        if(typeof embeddedMessage.embed.type === "undefined" || embeddedMessage.embed.type == null){
+            embeddedMessage.embed.type = "rich";
         }
-        
-        if(messageObj.sections != null){
-            for(var i = 0; i < messageObj.sections.length; i++){
-                embeddedMessage.addFields({
-                    name: messageObj.sections[i].title,
-                    value: messageObj.sections[i].text
-                });
+
+        if(typeof embeddedMessage.embed.description !== "undefined" && embeddedMessage.embed.description != null){
+            embeddedMessage.embed.description = this.FixBulletPoints(embeddedMessage.embed.description);
+        }
+
+        if(typeof embeddedMessage.embed.fields !== "undefined" && embeddedMessage.embed.fields != null){
+            for(var i = 0; i < embeddedMessage.embed.fields.length; i++){
+                if(typeof embeddedMessage.embed.fields[i].value !== "undefined") {
+                    let fixedFieldValue = this.FixBulletPoints(embeddedMessage.embed.fields[i].value);
+                    embeddedMessage.embed.fields[i].value = fixedFieldValue;
+                }
             }
         }
 
-        if(messageObj.image != null){
-            embeddedMessage.setImage(messageObj.image);
-        }
+        if((typeof embeddedMessage.embed.image === "undefined" || embeddedMessage.embed.image == null) 
+                && typeof embeddedMessage.embed.table !== "undefined" && embeddedMessage.embed.table != null){
 
-        if(messageObj.image == null && messageObj.table != null){
-            
-            const PxPerChar = 10;
-            const MarginPx = 5;
-            let maxCharsPerRow = Math.max(...(messageObj.table.split("\n").map(el => el.length))) + 2;
-                
-            let image = await textToImage.generate(messageObj.table, {
-                "fontFamily": "Courier",
-                "fontSize": 16, // 16 = Approx 10px width per character
-                "textColor": "#98b1b8", // Discord Light Gray
-                "bgColor": "#2f3136", // Discord Dark Gray
-                "maxWidth": maxCharsPerRow * PxPerChar + (2 * MarginPx),
-                "margin": MarginPx
+            // The "text-to-image" npm package causes random crashes on Raspberry Pi 4 so use "text2png"
+            const text2png = require('text2png');
+            let imageStream = text2png(embeddedMessage.embed.table, {
+                font: '16px Courier',
+                color: 'white',
+                bgColor: '#2f3136', // Discord Dark Gray
+                lineSpacing: 0,
+                padding: 0,
+                output: 'buffer'
             });
-        
-            const imageStream = new Buffer.from(image.split(",")[1], 'base64');
 
-            let imageName = messageObj.title.trim().toLowerCase().replace(/\s/g, "_").replace(/[^a-zA-Z0-9]/ig, "");
+            if(typeof embeddedMessage.embed.title !== "undefined" && embeddedMessage.embed.title != null){
+                imageName = embeddedMessage.embed.title.trim().toLowerCase().replace(/\s/g, "_").replace(/[^a-zA-Z0-9]/ig, "");
+            } else {
+                imageName = Math.random().toString(36).replace(/[^a-z]+/ig, '').substr(0,5);
+            }
+
             attachments = Array(new discord.MessageAttachment(imageStream, `${imageName}.png`));            
-            embeddedMessage.setImage(`attachment://${imageName}.png`);
-        }
+            embeddedMessage.embed.image = {
+                "url": `attachment://${imageName}.png`
+            };
+        }        
 
         if(attachments == null){
             return embeddedMessage;
         } else {
             return { 
-                embed: embeddedMessage, 
+                embed: embeddedMessage.embed, 
                 files: attachments
             };
         }
     },
-    SendReplies: async function(userMessage, replies, reactions = null, replyToPerson = false){
-        
+    ReactToMesageAsync: async function (bot, message, reactions){
+
+        if(bot == null || message == null || reactions == null) return;
+
+        if(typeof(reactions) === "string"){
+            reactions = Array(reactions);
+        }
+
+        for(var i=0; i < reactions.length; i++){
+            let emojiCode = await this.GetEmojiCodeAsync(bot, reactions[i]);
+            if(emojiCode != null){
+                var msg = await message.channel.messages.fetch(message.id);
+                await msg.react(emojiCode);
+            }
+        }
+    },    
+    GetEmojiCodeAsync: async function (bot, emojiShortcode){
+        // https://discordjs.guide/popular-topics/reactions.html#custom-emojis
+
+        if(emojiShortcode.match(/:[^:]+:$/g) != null && bot != null){
+            var emoji = await bot.emojis.cache.find(emoji => emoji.name == emojiShortcode.replace(/:|:$/g,''));
+            if(typeof(emoji) !== "undefined") {
+                // This is a custom emoji
+                return emoji.id;
+            } else {
+                // This is an invalid custom emoji
+                return null;
+            }
+        } else {
+            // This is a unicode emoji
+            return emojiShortcode;
+        }
+    },
+    SendReplies: async function(discord, bot, userMessage, replies, reactions = null, replyToPerson = false){
         if(replies != null){
-            
+
+            var message;
             var finalReplyMessage;
 
             for(var i=0; i < replies.length; i++){
-
-                if(replyToPerson || userMessage.channel == null){
-                    if(typeof replies[i] === "string") replies[i] = "\n" + replies[i];
-                    finalReplyMessage = await userMessage.reply(replies[i]);
+                if(replyToPerson || userMessage == null || typeof userMessage.channel === "undefined" || userMessage.channel == null){
+                    if(typeof replies[i] === "string") {
+                        message = "\n" + replies[i];
+                    } else {
+                        message = await this.ParseEmbeddedMessage(discord, replies[i]);
+                    }
+                    finalReplyMessage = await userMessage.reply(message);
                 } else {
                     if(typeof replies[i] === "string") {
                         finalReplyMessage = await userMessage.channel.send(replies[i], { split: true });
                     } else {
-                        finalReplyMessage = await userMessage.channel.send(replies[i]);
+                        message = await this.ParseEmbeddedMessage(discord, replies[i]);
+                        finalReplyMessage = await userMessage.channel.send(message);
                     }                
                 }
             }
 
             if(reactions != null){
-                await helpers.reactAsync(bot, finalReplyMessage, reactions);
+                let replyMessage = Array.isArray(finalReplyMessage) ? finalReplyMessage[0] : finalReplyMessage;
+                await this.ReactToMesageAsync(bot, replyMessage, reactions);
             }
         }
 
