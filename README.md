@@ -9,9 +9,10 @@ https://discordapp.com/oauth2/authorize?&client_id=777985751258234920&scope=bot&
 
 | Command          | Description                                                                               |
 |------------------|-------------------------------------------------------------------------------------------|
-| !about           | Info on how to add new functionality to HawxBot                                           |
+| !hawx            | List all available commands                                                               |
+| !hawxbot         | Info on how to add new functionality to HawxBot                                           |
 | !campaign        | Show Hawx's latest campaign task list                                                     |
-| !helpmehawx      | List all available commands                                                               |
+
 
 Table created with [Tables Generator](https://www.tablesgenerator.com/markdown_tables)
 
