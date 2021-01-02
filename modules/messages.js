@@ -1,4 +1,4 @@
-const LineBreak = "\n\uFEFF";
+const lineBreak = "\n\uFEFF";
 
 module.exports = {
     BotError: function(){
@@ -6,20 +6,20 @@ module.exports = {
     },
     AboutThisBot: async function(){
 
-        const BotAuthorDiscordId = '342266718334353408';
-        const BotAuthorForumUri = 'https://community.gemsofwar.com/u/Plip';
-        const BotEditorForumUri = 'https://community.gemsofwar.com/u/Hawx';
+        const botAuthorDiscordId = '342266718334353408';
+        const botAuthorForumUri = 'https://community.gemsofwar.com/u/Plip';
+        const botEditorForumUri = 'https://community.gemsofwar.com/u/Hawx';
 
         let embeddedMessage = {
             "embed": {
                 "title": ":robot:  HawxBot",
-                "description": `HawxBot is a source of Gems of War user guides and resources. It is curated by [Hawx](${BotEditorForumUri})${LineBreak}`,
+                "description": `HawxBot is a source of Gems of War user guides and resources. It is curated by [Hawx](${botEditorForumUri})${lineBreak}`,
                 "fields": [             
                     {
                         "name": ":writing_hand:  Contributors",
-                        "value": `[Hawx](${BotEditorForumUri}) creates all the guides and content that HawxBot hosts. ` +
-                                 `[Plip](${BotAuthorForumUri}) writes the code that powers HawxBot. ` +
-                                 `Drop him a message on Discord (<@!${BotAuthorDiscordId}>) with your ideas for the bot.${LineBreak}`,
+                        "value": `[Hawx](${botEditorForumUri}) creates all the guides and content that HawxBot hosts. ` +
+                                 `[Plip](${botAuthorForumUri}) writes the code that powers HawxBot. ` +
+                                 `Drop him a message on Discord (<@!${botAuthorDiscordId}>) with your ideas for the bot.${lineBreak}`,
                     },
                     {
                         "name": ":nerd:  Geek Stuff",
@@ -32,9 +32,9 @@ module.exports = {
 
         return embeddedMessage;
     },
-    ListBotCommands: async function(){
+    ListBotCommands: async function(botAboutCommand = "!about"){
 
-        message =   "**!about** - Info on how to add new functionality to HawxBot\n" +
+        message =   `**${botAboutCommand}** - Info on how to add new functionality to HawxBot\n` +
                     "[HawxCommands]";
         
         return message;
@@ -95,20 +95,18 @@ module.exports = {
                 imageName = Math.random().toString(36).replace(/[^a-z]+/ig, '').substr(0,5);
             }
 
-            attachments = Array(new discord.MessageAttachment(imageStream, `${imageName}.png`));            
-            embeddedMessage.embed.image = {
-                "url": `attachment://${imageName}.png`
-            };
+            attachments = Array(new discord.MessageAttachment(imageStream, `${imageName}.png`));
+
+            if(attachments != null){
+                
+                embeddedMessage.files = attachments;                   
+                embeddedMessage.embed.image = {
+                    "url": `attachment://${imageName}.png`
+                }
+            }
         }        
 
-        if(attachments == null){
-            return embeddedMessage;
-        } else {
-            return { 
-                embed: embeddedMessage.embed, 
-                files: attachments
-            };
-        }
+        return embeddedMessage;
     },
     ReactToMesageAsync: async function (bot, message, reactions){
 
