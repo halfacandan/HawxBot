@@ -13,7 +13,12 @@ module.exports = {
         let json = await MakeApiGetCallAsync(endpointPath);
         return json;
     },
-    GetHawxCommandItems: async function (endpointPath){
+    GetHawxCommandItems: async function (endpointPath, maxItemCount = null){
+
+        if(typeof maxItemCount === "number" && maxItemCount > 0){
+            endpointPath += `?limit=${maxItemCount}`;
+        }
+
         let json = await MakeApiGetCallAsync(endpointPath);
         return json;
     },

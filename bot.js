@@ -109,8 +109,9 @@ bot.on('message', async message => {
                         // If no arguments are specified then just show the latest data
                         if(parsedMessage.Arguments.length == 0) parsedMessage.Arguments = Array("latest");
                         let hawxApiUrl = hawxCommand.links.href + "/" + parsedMessage.Arguments.join("/");
-                        
-                        let data = await gowApi.GetHawxCommandItems(hawxApiUrl);
+                        const maxItemCount = 3;
+
+                        let data = await gowApi.GetHawxCommandItems(hawxApiUrl, maxItemCount);
                         
                         // Check whether or not a message was returned
                         if(data.messages.length < 1){
