@@ -96,6 +96,7 @@ bot.on('message', async message => {
             
             hawxCommands = await gowApi.ListHawxCommands();
             for(var i=0; i < hawxCommands.commands.length; i++){
+                
                 let hawxCommand = hawxCommands.commands[i];
 
                 // Try to match a command
@@ -108,7 +109,12 @@ bot.on('message', async message => {
                     } else {
                         // If no arguments are specified then just show the latest data
                         if(parsedMessage.Arguments.length == 0) parsedMessage.Arguments = Array("latest");
-                        let hawxApiUrl = hawxCommand.links.href + "/" + parsedMessage.Arguments.join("/");
+                        // Strip out any non-alphanumeric characters
+                        let hawxApiParams = parsedMessage.Arguments.map(function(argument){
+                            return argument.replace(/[^a-zA-Z0-9]/g,"");  
+                        });
+
+                        let hawxApiUrl = hawxCommand.links.href + "/" + hawxApiParams.join("/");
                         const maxItemCount = 3;
 
                         let data = await gowApi.GetHawxCommandItems(hawxApiUrl, maxItemCount);
