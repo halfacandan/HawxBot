@@ -1,6 +1,6 @@
 module.exports = {
-    AboutHawxCommands: async function (){
-        const endpointPath = "v1/hawx";
+    AboutHawxCommands: async function (botCommandPrefix){
+        const endpointPath = `v1/hawx?commandPrefix=${encodeURIComponent(botCommandPrefix)}`;
         let json = await MakeApiGetCallAsync(endpointPath);
         var about = "";
         for(var i=0; i < json.commands.length; i++){
@@ -8,22 +8,18 @@ module.exports = {
         }
         return about;
     },
-    ListHawxCommands: async function (){
-        const endpointPath = "v1/hawx";
+    ListHawxCommands: async function (botCommandPrefix){
+        const endpointPath = `v1/hawx?commandPrefix=${encodeURIComponent(botCommandPrefix)}`;
         let json = await MakeApiGetCallAsync(endpointPath);
         return json;
     },
-    GetHawxCommandItems: async function (endpointPath, maxItemCount = null){
+    GetHawxCommandItems: async function (endpointPath, botCommandPrefix, maxItemCount = null){
 
+        endpointPath += `?commandPrefix=${encodeURIComponent(botCommandPrefix)}`;
         if(typeof maxItemCount === "number" && maxItemCount > 0){
-            endpointPath += `?limit=${maxItemCount}`;
+            endpointPath += `&limit=${maxItemCount}`;
         }
 
-        let json = await MakeApiGetCallAsync(endpointPath);
-        return json;
-    },
-    GetLatestCampaignTasks: async function (){
-        const endpointPath = "v1/game/campaigntasks/latest";
         let json = await MakeApiGetCallAsync(endpointPath);
         return json;
     },

@@ -32,9 +32,9 @@ module.exports = {
 
         return embeddedMessage;
     },
-    ListBotCommands: async function(botAboutCommand = "!about"){
+    ListBotCommands: async function(botAboutCommand = "about", botCommandPrefix = "!"){
 
-        message =   `**${botAboutCommand}** - Info on how to add new functionality to HawxBot\n` +
+        message =   `**${botCommandPrefix}${botAboutCommand}** - Info on how to add new functionality to HawxBot\n` +
                     "[HawxCommands]";
         
         return message;

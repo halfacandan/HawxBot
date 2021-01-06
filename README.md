@@ -7,12 +7,13 @@ https://discordapp.com/oauth2/authorize?&client_id=777985751258234920&scope=bot&
 
 ## Commands
 
-| Command          | Description                                                                               |
-|------------------|-------------------------------------------------------------------------------------------|
-| !hawx            | List all available commands                                                               |
-| !hawxbot         | Info on how to add new functionality to HawxBot                                           |
-| !campaign        | Show Hawx's latest campaign task list                                                     |
-
+| Command          | Description                                          |
+|------------------|------------------------------------------------------|
+| %hawx            | List all available commands                          |
+| %hawxbot         | Info on how to add new functionality to HawxBot      |
+| %campaign        | Show Hawx's latest campaign task list                |
+| %soulforge       | Show Hawx's latest soul forge weapon previews        |
+| %worldevent      | Show Hawx's latest world event cheat sheets          |
 
 Table created with [Tables Generator](https://www.tablesgenerator.com/markdown_tables)
 

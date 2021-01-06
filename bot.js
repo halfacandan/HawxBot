@@ -1,5 +1,6 @@
-const botHelpCommand = "!hawx";
-const botAboutCommand = "!hawxbot";
+const botCommandPrefix = "%"
+const botHelpCommand = "hawx";
+const botAboutCommand = "hawxbot";
 const lineBreak = "\n\uFEFF";
 
 const helpers = require('./modules/helpers.js');
@@ -17,7 +18,7 @@ bot.on('ready', () => {
     botName = bot.user.username;
 
     bot.user.setStatus('online');
-    bot.user.setActivity(botHelpCommand, { type: 'LISTENING' });
+    bot.user.setActivity(`${botCommandPrefix}${botHelpCommand}`, { type: 'LISTENING' });
 
     console.log(`${botName} is online`);
 });
@@ -33,7 +34,7 @@ bot.on('message', async message => {
     if (discordUser === botName) return;
 
     // Parse the message
-    let parsedMessage = await helpers.ParseMessage(message);
+    let parsedMessage = await helpers.ParseMessage(message, botCommandPrefix);
 
     // Define the reply
     var data = null;
@@ -42,23 +43,23 @@ bot.on('message', async message => {
     var replyToPerson = true;
 
     switch (parsedMessage.Command) {
-        case botAboutCommand:
+        case `${botCommandPrefix}${botAboutCommand}`:
             if(message.channel != null) message.channel.startTyping();
 
             replies.push(await messages.AboutThisBot());
             break;
 
-        case botHelpCommand:
+        case `${botCommandPrefix}${botHelpCommand}`:
             if(message.channel != null) message.channel.startTyping();
 
-            staticCommands = await messages.ListBotCommands(botAboutCommand);
-            dynamicCommands = await gowApi.AboutHawxCommands();
+            staticCommands = await messages.ListBotCommands(botAboutCommand, botCommandPrefix);
+            dynamicCommands = await gowApi.AboutHawxCommands(botCommandPrefix);
 
             replies.push(staticCommands.replace("[HawxCommands]", dynamicCommands));
 
             break;
 
-        case '!patchnotes':
+        case `${botCommandPrefix}patchnotes`:
 
             // Disabled
             return;
@@ -75,7 +76,7 @@ bot.on('message', async message => {
             replyToPerson = false;
             break;
 
-        case '!patchnotesmajor':
+        case `${botCommandPrefix}patchnotesmajor`:
 
             // Disabled
             return;
@@ -91,12 +92,12 @@ bot.on('message', async message => {
             replies = replies.concat(data.messages);
             replyToPerson = false;
             break;
-        
+
         default:
-            
-            hawxCommands = await gowApi.ListHawxCommands();
+
+            hawxCommands = await gowApi.ListHawxCommands(botCommandPrefix);
             for(var i=0; i < hawxCommands.commands.length; i++){
-                
+
                 let hawxCommand = hawxCommands.commands[i];
 
                 // Try to match a command
@@ -117,10 +118,10 @@ bot.on('message', async message => {
                         let hawxApiUrl = hawxCommand.links.href + "/" + hawxApiParams.join("/");
                         const maxItemCount = 3;
 
-                        let data = await gowApi.GetHawxCommandItems(hawxApiUrl, maxItemCount);
+                        let data = await gowApi.GetHawxCommandItems(hawxApiUrl, botCommandPrefix, maxItemCount);
                         
                         // Check whether or not a message was returned
-                        if(data.messages.length < 1){
+                        if(data == null || data.messages.length < 1){
                             var notFoundResponse = hawxCommand.help;
                             notFoundResponse.content = 
                                 "Sorry, we can't find anything that matches your query. " +
